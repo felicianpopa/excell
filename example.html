@@ -52,11 +52,24 @@
         // body: window.Backgrid.SummedColumnBody.extend({ columnsToSum: ['name', 'value'] })
       });
 
-      document.body.appendChild(grid.render().el);
       
+
+
+$(document).ready(function(){
+  $('.main-table').append(grid.render().el);
+});
+      
+      function insertColumn() {
+        grid.insertColumn([{
+        name: "lastUpdated",
+        label: "Last Updated",
+        cell: "string",
+        editable: false
+      }]);
+      }
     </script>
     <div class="main-table"></div>
-    <div class="comparabiles"></div>
+    <button onclick="insertColumn();">Insert column</button>
   </body>
 
 </html>
