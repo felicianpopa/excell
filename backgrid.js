@@ -819,6 +819,8 @@ var Cell = Backgrid.Cell = Backbone.View.extend({
     delete this.currentEditor;
     this.$el.removeClass("editor");
     this.render();
+    runFormula();
+    // alert('exited');
   },
 
   /**
