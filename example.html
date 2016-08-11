@@ -12,7 +12,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
     <script src="backgrid.js"></script>
-    <script src="backgrid-sum.js"></script>
+    <script src="script.js"></script>
     <style type="text/css">
       table {
         border: 1px solid #000;
@@ -30,46 +30,21 @@
       }
     </style>
 
-    <script>
-
-      var col = new Backbone.Collection(
-        [
-          { name: 'suma', value1: '3', value2: '5', formula: 3 },
-          { name: 'inmultire', value1: '20.75', value2: '5', formula: 2 },
-          { name: 'impartire', value1: '20.75', value2: '5', formula: 2 }
-        ]
-      );
-
-      var grid = new Backgrid.Grid({
-        columns: [
-          {label: 'Name', name: 'name', editable: true, cell: 'string' },
-          {label: 'Value 1', name: 'value1', editable: true, cell: 'string' },
-          {label: 'Value 2 not editable', name: 'value2', editable: false, cell: 'string' },
-         
-        ],
-        collection: col,
-        // row: window.Backgrid.SummedRow.extend({ columnsToSum: ['name', 'value'], multiplier: 'multiplier' }),
-        // body: window.Backgrid.SummedColumnBody.extend({ columnsToSum: ['name', 'value'] })
-      });
-
-      
-
-
-$(document).ready(function(){
-  $('.main-table').append(grid.render().el);
-});
-      
-      function insertColumn() {
-        grid.insertColumn([{
-        name: "lastUpdated",
-        label: "Last Updated",
-        cell: "string",
-        editable: false
-      }]);
-      }
-    </script>
     <div class="main-table"></div>
-    <button onclick="insertColumn();">Insert column</button>
+    <div class="new-column">
+      <div class="input-holder">
+        <label>val 1</label>
+        <input type="text" name="val-1">
+      </div>
+      <!-- <div class="input-holder">
+        <label>val 2</label>
+        <input type="text" name="val-2">
+      </div> -->
+      
+      <button  class="insert-column">Insert column</button>  
+    </div>
+    
+
   </body>
 
 </html>
