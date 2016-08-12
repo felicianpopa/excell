@@ -1,16 +1,23 @@
+var columnIndex = 0;
+var functionCaller = "insertColumn"+columnIndex;
+var clickedCellIndex = 0;
 var myCustomCell = Backgrid.CustomCell = Backgrid.Cell.extend({
   initialize: function (options) {
     Backgrid.Cell.prototype.initialize.apply(this, arguments);
     this.listenTo(this.model, "backgrid:edited", this.changedCellCallback);
+    this.listenTo(this.model, "backgrid:editing", this.editingCellCallback);
   },
 // /* @property /
   events: {
     "click": "enterEditMode",
     
   },
+  editingCellCallback: function (e) {
+    clickedCellIndex = $('.main-table tbody td.editor').index();
+  },
   changedCellCallback: function (e) {
-    // runFormula();
-    console.log(e.collection.models);
+    updateFormula();
+    // console.log(e.collection.models);
   },
       // /* @property /
     className: "custom",
@@ -38,9 +45,11 @@ var grid = new Backgrid.Grid({
 $(document).ready(function(){
   $('.main-table').append(grid.render().el);
   $('.insert-column').on('click', function(){
+    console.log(functionCaller);
     runFormula();
     addData($(this));
-    insertColumn();
+    eval(functionCaller)();
+    incrementCompIndex();
     addFormula();
     addNamesToCells();
     incrementInputNames();
@@ -48,15 +57,69 @@ $(document).ready(function(){
   });
 
 });
-// Insert a new column(plugin functionality).    
-function insertColumn() {
-  grid.insertColumn([{
-  label: "Comparabila 1",
-  name: "comp",
-  editable: true,
-  cell: "custom",
-}]);
+// increment Comp Index
+function incrementCompIndex() {
+  columnIndex ++;
+  functionCaller = "insertColumn"+columnIndex;
 }
+
+// Insert Columns.
+//======================================================= 
+function insertColumn0() {
+  grid.insertColumn([{
+    label: "Comparabila 1",
+    name: 'compIndex0',
+    editable: true,
+    cell: "custom",
+  }]);
+}
+
+function insertColumn1() {
+  grid.insertColumn([{
+    label: "Comparabila 2",
+    name: 'compIndex1',
+    editable: true,
+    cell: "custom",
+  }]);
+}
+
+function insertColumn2() {
+  grid.insertColumn([{
+    label: "Comparabila 3",
+    name: 'compIndex2',
+    editable: true,
+    cell: "custom",
+  }]);
+}
+
+function insertColumn3() {
+  grid.insertColumn([{
+    label: "Comparabila 4",
+    name: 'compIndex3',
+    editable: true,
+    cell: "custom",
+  }]);
+}
+
+function insertColumn4() {
+  grid.insertColumn([{
+    label: "Comparabila 5",
+    name: 'compIndex4',
+    editable: true,
+    cell: "custom",
+  }]);
+}
+
+function insertColumn5() {
+  grid.insertColumn([{
+    label: "Comparabila 6",
+    name: 'compIndex5',
+    editable: true,
+    cell: "custom",
+  }]);
+}
+// End insert Columns.
+//=======================================================
 // Add the data from the inputs to the column to be created.
 function addData(elem) {
   $('.inputs .input-holder').each(function(){
@@ -65,7 +128,11 @@ function addData(elem) {
     // get the index of each input.
     var elementIndex = $(this).index();
     // assign the values to the new column
-    col.models[elementIndex].attributes.comp = value ;
+    // console.log(compIndex)
+    var attrIndex ='compIndex'+columnIndex;
+    col.models[elementIndex].attributes[attrIndex] = value ;
+
+    console.log(col.models[elementIndex].attributes)
   });
 }
 
@@ -93,11 +160,23 @@ function runFormula() {
   $('.inputs .input-holder').each(function(){
     var theFormula = $(this).find('input').attr('data-formula');
     if(theFormula !== undefined) {
+      chooseCalculationMethod = 0;
       var elIndex = $(this).index();
       eval(theFormula+'(' + elIndex + ')');
     }
   });
 }
+// Udate the values in the table
+function updateFormula() {
+  $('.main-table tbody tr').each(function(){
+    var theFormula = $(this).find('td').eq(clickedCellIndex).attr('data-formula');
+    if(theFormula !== undefined) {
+      chooseCalculationMethod = 1;
+      eval(theFormula+'(' + clickedCellIndex + ')');
+    }
+  });
+}
+
 // Increment the input names.
 function incrementInputNames() {
   $('.inputs .input-holder').each(function(){
@@ -112,13 +191,38 @@ function incrementInputNames() {
 function setInput(inputNumber) {
   return parseInt($('.inputs .input-holder').eq(inputNumber).find('input').val());
 }
+// Simplify the notatin for the table cells used in the formulas
+function setCell(cellNumber) {
+  // $('.main-table tbody tr').eq(cellNumber).find('td').eq(clickedCellIndex).addClass('test');
+  // console.log(col.models)
+  // return parseInt($('.main-table tbody tr').eq(cellNumber).find('td').eq(clickedCellIndex).html());
+  return parseInt(col.models[cellNumber].attributes.comp);
+}
 // Clear the input values
 function clearInputs() {
     $('.inputs input').val('');
 }
-// Test formula
+// Test formulas
 function function1(theElement) {
-  var formula = setInput(0) + setInput(1);
-  // get each input which has a formula inside and update it's value
-  $('.inputs .input-holder').eq(theElement).find('input').val(formula);
+  if (chooseCalculationMethod === 0) {
+    var inputFormula = setInput(0) + setInput(1);
+    // get each input which has a formula inside and update it's value
+    $('.inputs .input-holder').eq(theElement).find('input').val(inputFormula);
+  } else if(chooseCalculationMethod === 1) {
+    // setCell(0);
+    var cellFormula = setCell(0) + setCell(1);
+    // console.log(setCell(1));
+    // console.log(cellFormula);
+    // col.models[theElement].attributes.comp = cellFormula;
+    console.log(cellFormula);
+    // console.log(theElement);
+    // $('.main-table tbody tr').each(function(){
+    //   // $(this).find('td[data-formula="function1"]').html(cellFormula);
+    //   $(this).find('td[data-formula="function1"]').each(function(){
+    //     if($(this).index() === theElement) {
+    //       // $(this).html(cellFormula);
+    //     }
+    //   });
+    // });
+  }
 }
