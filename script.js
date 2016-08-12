@@ -17,7 +17,6 @@ var myCustomCell = Backgrid.CustomCell = Backgrid.Cell.extend({
   },
   changedCellCallback: function (e) {
     updateFormula();
-    // console.log(e.collection.models);
   },
       // /* @property /
     className: "custom",
@@ -45,7 +44,6 @@ var grid = new Backgrid.Grid({
 $(document).ready(function(){
   $('.main-table').append(grid.render().el);
   $('.insert-column').on('click', function(){
-    console.log(functionCaller);
     runFormula();
     addData($(this));
     eval(functionCaller)();
@@ -128,11 +126,8 @@ function addData(elem) {
     // get the index of each input.
     var elementIndex = $(this).index();
     // assign the values to the new column
-    // console.log(compIndex)
     var attrIndex ='compIndex'+columnIndex;
     col.models[elementIndex].attributes[attrIndex] = value ;
-
-    console.log(col.models[elementIndex].attributes)
   });
 }
 
@@ -193,36 +188,28 @@ function setInput(inputNumber) {
 }
 // Simplify the notatin for the table cells used in the formulas
 function setCell(cellNumber) {
-  // $('.main-table tbody tr').eq(cellNumber).find('td').eq(clickedCellIndex).addClass('test');
-  // console.log(col.models)
-  // return parseInt($('.main-table tbody tr').eq(cellNumber).find('td').eq(clickedCellIndex).html());
-  return parseInt(col.models[cellNumber].attributes.comp);
+  var attrIndex ='compIndex'+(clickedCellIndex-1);
+  return parseInt(col.models[cellNumber].attributes[attrIndex]);
 }
 // Clear the input values
 function clearInputs() {
     $('.inputs input').val('');
 }
 // Test formulas
+// The first if is for the inputs and the second for the cells. Please enter the formula in both of them.
 function function1(theElement) {
   if (chooseCalculationMethod === 0) {
     var inputFormula = setInput(0) + setInput(1);
     // get each input which has a formula inside and update it's value
     $('.inputs .input-holder').eq(theElement).find('input').val(inputFormula);
   } else if(chooseCalculationMethod === 1) {
-    // setCell(0);
     var cellFormula = setCell(0) + setCell(1);
-    // console.log(setCell(1));
-    // console.log(cellFormula);
-    // col.models[theElement].attributes.comp = cellFormula;
-    console.log(cellFormula);
-    // console.log(theElement);
-    // $('.main-table tbody tr').each(function(){
-    //   // $(this).find('td[data-formula="function1"]').html(cellFormula);
-    //   $(this).find('td[data-formula="function1"]').each(function(){
-    //     if($(this).index() === theElement) {
-    //       // $(this).html(cellFormula);
-    //     }
-    //   });
-    // });
+    var attrIndex =clickedCellIndex-1;
+    console.log(attrIndex);
+    // console.log(col.models[2].attributes.compIndex0);
+    // console.log(clickedCellIndex);
+    $('.main-table tbody td[data-formula="function1"]').eq(attrIndex).html(cellFormula);
+    // col.models[cellNumber].attributes[attrIndex] = cellFormula;
+    // col.models[2].attributes.compIndex0 = cellFormula;
   }
 }
