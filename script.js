@@ -1,3 +1,21 @@
+var myCustomCell = Backgrid.CustomCell = Backgrid.Cell.extend({
+  initialize: function (options) {
+    Backgrid.Cell.prototype.initialize.apply(this, arguments);
+    this.listenTo(this.model, "backgrid:edited", this.changedCellCallback);
+  },
+// /* @property /
+  events: {
+    "click": "enterEditMode",
+    
+  },
+  changedCellCallback: function (e) {
+    // runFormula();
+    console.log(e.collection.models);
+  },
+      // /* @property /
+    className: "custom",
+});
+
 var col = new Backbone.Collection(
   [
   // Rows
@@ -10,7 +28,7 @@ var col = new Backbone.Collection(
 var grid = new Backgrid.Grid({
   // Columns
   columns: [
-    {label: 'Raport initial', name: 'name', editable: true, cell: 'string' },
+    {label: 'Raport initial', name: 'name', editable: true, cell: 'custom' },
   ],
   collection: col,
   // row: window.Backgrid.SummedRow.extend({ columnsToSum: ['name', 'value'], multiplier: 'multiplier' }),
@@ -21,8 +39,6 @@ var grid = new Backgrid.Grid({
 
 
 $(document).ready(function(){
-  
-
   $('.main-table').append(grid.render().el);
   $('.insert-column').on('click', function(){
     addData($(this));
@@ -92,12 +108,37 @@ function incrementInputNames() {
     var oldNumber = oldName.split('-')[2];
     var newNumber = +oldNumber + 1
     var newName = oldName.split('-')[0] + '-' + oldName.split('-')[1] + '-' + newNumber;
-    console.log(newName);
     $(this).find('input').attr('name',newName);
   });
 }
 
+// function function1(theElement) {
+//   console.log('running the function');
+//   var output = "";
+//   var columnId = $('tr .editor').index();
+//   if(columnId > 0) {
+//     var output =  parseInt($('td[data-cell-name="val-1-' + columnId + '"]').html()) +  parseInt($('td[data-cell-name="val-2-' + columnId + '"]').html());
+//   }
+//   else {
+//     var output =  parseInt($('td[data-cell-name="val-1-1"]').html()) +  parseInt($('td[data-cell-name="val-2-1"]').html());
+//   }
+  
+//   theElement.html(output)
+//   console.log(col)
+// }
+
 function function1(theElement) {
- var output =  parseInt($('td[data-cell-name="val-1-1"]').html()) +  parseInt($('td[data-cell-name="val-2-1"]').html());
- theElement.html(output)
+  // var rowIndex = 
+  console.log(theElement.parent().index())
+  var output = "";
+  var columnId = theElement.parent().index();
+  // if(columnId > 0) {
+  //   var output =  parseInt($('td[data-cell-name="val-1-' + columnId + '"]').html()) +  parseInt($('td[data-cell-name="val-2-' + columnId + '"]').html());
+  // }
+  // else {
+    var output =  parseInt($('td[data-cell-name="val-1-1"]').html()) +  parseInt($('td[data-cell-name="val-2-1"]').html());
+  // }
+  
+  theElement.html(output);
+  col.models[columnId].attributes.comp1= output;
 }
